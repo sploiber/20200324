@@ -8,7 +8,6 @@ chainstrength = 5
 numruns = 1000
 
 bqm = dimod.BinaryQuadraticModel.from_qubo(Q, offset=-2)
-print(bqm)
 sampler = EmbeddingComposite(DWaveSampler())
 sampleset = sampler.sample(bqm, chain_strength=chainstrength, num_reads=numruns)
 dwave.inspector.show(bqm, sampleset, sampler)
