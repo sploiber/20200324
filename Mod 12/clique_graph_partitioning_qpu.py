@@ -32,4 +32,6 @@ sampler = FixedEmbeddingComposite(DWaveSampler(), embedding)
 response = sampler.sample(bqm, chain_strength=chainstrength, num_reads=1000)
 
 for sample, energy, num, cbf in response.data(['sample', 'energy', 'num_occurrences', 'chain_break_fraction']):
-    print(sample, energy, num, cbf)
+    count_ones = sum([v for v in sample.values() if v == 1])
+    if count_ones == N/2:
+        print(sample, energy, num, cbf)
