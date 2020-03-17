@@ -4,6 +4,7 @@ import sys
 
 # Graph partitioning on clique
 N = int(sys.argv[1])
+time_limit = int(sys.argv[2])
 gamma = 3
 linear = (N - 1) * (1 - gamma)
 quad = (2 * gamma) - 2
@@ -16,8 +17,10 @@ for i in range(N):
         bqm.quadratic[i, j] = quad
 
 sampler = LeapHybridSampler(profile='hss')
-response = sampler.sample(bqm)
+response = sampler.sample(bqm, time_limit=time_limit)
 
 print(response.info)
 for sample, energy in response.data(['sample', 'energy']):
-    print(sample, energy)
+    count_ones = sum([v for v in sample.values() if v == 1.])
+    if count_ones == N/2:
+        print(sample, energy, count_ones)

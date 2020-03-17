@@ -79,6 +79,7 @@ def knapsack_bqm(costs, weights, weight_capacity):
 
 data_file_name = sys.argv[1] if len(sys.argv) > 1 else "data.txt"
 weight_capacity = float(sys.argv[2]) if len(sys.argv) > 2 else 70
+time_limit = int(sys.argv[3])
 
 # parse input data
 df = pd.read_csv(data_file_name, header=None)
@@ -86,8 +87,8 @@ df.columns = ['cost', 'weight']
 
 bqm = knapsack_bqm(df['cost'], df['weight'], weight_capacity)
 
-sampler = LeapHybridSampler()
-sampleset = sampler.sample(bqm)
+sampler = LeapHybridSampler(profile='hss')
+sampleset = sampler.sample(bqm, time_limit=3)
 for sample, energy in zip(sampleset.record.sample, sampleset.record.energy):
 
     # Build solution from returned bitstring
@@ -101,3 +102,4 @@ for sample, energy in zip(sampleset.record.sample, sampleset.record.energy):
             # weights are numerically sorted
             solution.append(df['weight'][int(this_var[1:])])
     print("Found solution {} at energy {}.".format(solution, energy))
+print(sampleset.info)
